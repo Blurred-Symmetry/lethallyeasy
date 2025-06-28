@@ -162,8 +162,4 @@ def deploy_it() -> None:
 
 
 if __name__ == "__main__":
-    breakpoint()
-
-
-def test_it():
     deploy_it()
