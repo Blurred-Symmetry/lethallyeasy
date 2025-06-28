@@ -1,23 +1,19 @@
 from __future__ import annotations
 
+import json
+import shutil
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 from typing import Self, Sequence, cast
-import json
-from datetime import datetime
-import shutil
 
 import yaml
-
 
 TEMPLATE_DIR = Path("template")
 MANIFEST_TEMPLATE_PATH = TEMPLATE_DIR / "manifest.json"
 DEPLOY_DIR = Path("deployment")
 DEPLOY_NAME_SLUG = "sivad"
-STATIC_TEMPLATE_FILES = [
-    "icon.png",
-    "README.md"
-]
+STATIC_TEMPLATE_FILES = ["icon.png", "README.md"]
 
 
 @dataclass
@@ -30,7 +26,7 @@ class ModInfo:
     @classmethod
     def format_version(cls, version_dict: dict[str, str]) -> str:
         assert set(version_dict.keys()) == {"major", "minor", "patch"}
-        return f"{version_dict.get("major")}.{version_dict.get("minor")}.{version_dict.get("patch")}"
+        return f"{version_dict.get('major')}.{version_dict.get('minor')}.{version_dict.get('patch')}"
 
     @classmethod
     def from_dict(cls, yaml_block: dict[str, bool | str | int | float]) -> Self:
@@ -74,7 +70,9 @@ def init_deployment() -> Path:
 
     def _refresh(deployment_path: Path) -> None:
         if deployment_path.is_file():
-            raise RuntimeError(f"{deployment_path} exists and is not a directory, don't want to break something, exiting...")
+            raise RuntimeError(
+                f"{deployment_path} exists and is not a directory, don't want to break something, exiting..."
+            )
         if deployment_path.exists():
             shutil.rmtree(deployment_path)
         deployment_path.mkdir()
@@ -154,6 +152,7 @@ def zip_deployment(deploy_dir: Path) -> None:
     zip_name = deploy_dir.name
     zip_path = deploy_dir.parent / zip_name
     shutil.make_archive(zip_path, format="zip", root_dir=deploy_dir)
+
 
 def deploy_it() -> None:
     mods = load_sources()
